@@ -7,9 +7,10 @@
              mc:Ignorable="d"
              Title="Задание на отверстия"
              WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen"
-             Height="450" Width="600" KeyDown="Window_KeyDown">
+             Height="530" Width="600" MinHeight="530" MinWidth="600" MaxHeight="530" MaxWidth="600"
+             KeyDown="Window_KeyDown">
 
-    <Grid>
+    <Grid Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="230"/>
             <RowDefinition Height="300*"/>
@@ -18,8 +19,8 @@
             <ColumnDefinition Width="300*"/>
             <ColumnDefinition Width="300*"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Column="0" Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.RowSpan="2" Background="#FFABADB3"/>
-        <Label x:Name="label" Content="Выберите связанный файл:" Margin="10,5,0,0" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top" Width="290" Grid.ColumnSpan="2"/>
+        <GridSplitter Grid.Column="0" Width="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.RowSpan="2" Background="#FFABADB3" Margin="0"/>
+        <Label x:Name="label_RevitLinkInstance" Content="Выберите связанный файл:" Margin="10,5,0,0" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Grid.ColumnSpan="2"/>
         <ListBox x:Name="listBox_RevitLinkInstance" Margin="10,35,10,0" SelectionMode="Extended" Height="190" VerticalAlignment="Top"/>
 
         <Label x:Name="label_IntersectionWallRectangularFamilySymbol" Content="Тип для прямоугольного отверстия в стене:" Margin="10,10,10,0" VerticalAlignment="Top" Grid.Column="1" Height="25" VerticalContentAlignment="Center"/>
@@ -31,33 +32,51 @@
         <Label x:Name="label_IntersectionFloorRoundFamilySymbol" Content="Тип для круглого отверстия в плите:" Margin="10,175,10,0" VerticalAlignment="Top" Grid.Column="1" Height="25" VerticalContentAlignment="Center"/>
         <ComboBox x:Name="comboBox_IntersectionFloorRoundFamilySymbol" Grid.Column="1" Margin="10,200,10,0" VerticalAlignment="Top" Height="25" VerticalContentAlignment="Center" MaxDropDownHeight="300"/>
 
-        <GroupBox x:Name="groupBox" Grid.Column="1" Header="Форма отверстий:" Height="60" Margin="10,10,10,0" Grid.Row="1" VerticalAlignment="Top" BorderBrush="#FFABADB3">
+        <GroupBox x:Name="groupBox_HoleShape" Grid.Column="1" Header="Форма отверстий:" Height="50" Margin="10,10,10,0" Grid.Row="1" VerticalAlignment="Top" BorderBrush="#FFABADB3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50*"/>
                     <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton x:Name="radioButton_Rectangular" Content="Прямоугольные" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" IsChecked="True" Height="25" Width="110" VerticalContentAlignment="Center" />
-                <RadioButton x:Name="radioButton_Round" Content="Круглые" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Width="70" Height="25" VerticalContentAlignment="Center"/>
+                <RadioButton x:Name="radioButton_HoleShapeRectangular" Content="Прямоугольная" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" IsChecked="True" Height="25" Width="110" VerticalContentAlignment="Center" Checked="radioButton_HoleShape_Checked"/>
+                <RadioButton x:Name="radioButton_HoleShapeRound" Content="Круглая" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Width="70" Height="25" VerticalContentAlignment="Center" Checked="radioButton_HoleShape_Checked"/>
             </Grid>
         </GroupBox>
 
+        <Label x:Name="label_RoundHoleSizes" Content="Округлять размеры отверстий до:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,65,0,0" Grid.Row="1" VerticalAlignment="Top" Width="210" Height="26" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_RoundHoleSizesUpIncrement" HorizontalAlignment="Left" Height="26" Margin="220,65,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="1"/>
+        <Label x:Name="label_RoundHoleSizesMM" Content="мм" Grid.Column="1" HorizontalAlignment="Left" Margin="260,65,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Height="26" VerticalContentAlignment="Center"/>
 
-        <TextBox x:Name="textBox_PipeSideClearance" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="textBox_PipeTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="10,40,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="label_RoundHolePosition" Content="Округлять положение отверстий до:" Grid.Column="1" HorizontalAlignment="Left" Margin="10,160,0,0" Grid.Row="1" VerticalAlignment="Top" Width="210" Height="26" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <TextBox x:Name="textBox_RoundHolePositionIncrement" HorizontalAlignment="Left" Height="26" Margin="220,160,0,0" Grid.Row="1" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="1" IsEnabled="False"/>
+        <Label x:Name="label_RoundHolePositionMM" Content="мм" Grid.Column="1" HorizontalAlignment="Left" Margin="260,160,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Height="26" VerticalContentAlignment="Center" IsEnabled="False"/>
 
-        <TextBox x:Name="textBox_DuctSideClearance" HorizontalAlignment="Left" Height="25" Margin="10,84,0,0" Grid.Row="1" TextWrapping="Wrap" Text="75" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="textBox_DuctTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="10,114,0,0" Grid.Row="1" TextWrapping="Wrap" Text="75" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <GroupBox x:Name="groupBox_RoundHolesPosition" Grid.Column="1" Header="Округлять положение отверстий:" Height="50" Margin="10,104,10,0" Grid.Row="1" VerticalAlignment="Top" BorderBrush="#FFABADB3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="119*"/>
+                    <ColumnDefinition Width="134*"/>
+                </Grid.ColumnDefinitions>
+                <RadioButton x:Name="radioButton_RoundHolesPositionYes" Content="Да" HorizontalAlignment="Center" Margin="26.878,1,42,1" VerticalAlignment="Center" IsChecked="True" Height="25" Width="50" VerticalContentAlignment="Center" Checked="radioButton_RoundHolesPosition_Checked" Grid.Column="1" />
+                <RadioButton x:Name="radioButton_RoundHolesPositionNo" Content="Нет" Margin="42,1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Width="50" Height="25" VerticalContentAlignment="Center" IsChecked="True" Checked="radioButton_RoundHolesPosition_Checked"/>
+            </Grid>
+        </GroupBox>
 
-        <TextBox x:Name="textBox_CableTraySideClearance" HorizontalAlignment="Left" Height="25" Margin="241,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="textBox_CableTrayTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="241,40,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Image x:Name="image" Margin="10,10,0,0" Grid.Row="1" Source="Resources/GloryHoleCommandImage.png" Width="276" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBox_PipeSideClearance" HorizontalAlignment="Left" Height="25" Margin="16,19,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_PipeTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="16,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_PipeRoundClearance" HorizontalAlignment="Left" Height="25" Margin="16,106,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ElementName=textBox_PipeSideClearance,Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
 
-        <TextBox x:Name="textBox_RoundUpIncrement" HorizontalAlignment="Left" Height="25" Margin="241,114,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="45" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_DuctSideClearance" HorizontalAlignment="Left" Height="25" Margin="135,19,0,0" Grid.Row="1" TextWrapping="Wrap" Text="75" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_DuctTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="135,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="75" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_DuctRoundClearance" HorizontalAlignment="Left" Height="25" Margin="135,106,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ElementName=textBox_DuctSideClearance,Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
-        <Button x:Name="btn_Ok" Content="Ок" HorizontalAlignment="Right" Margin="0,0,125,10" VerticalAlignment="Bottom" Width="100" Height="25" Click="btn_Ok_Click" Grid.Column="1" Grid.Row="1"/>
+        <TextBox x:Name="textBox_CableTraySideClearance" HorizontalAlignment="Left" Height="25" Margin="17,176,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox_CableTrayTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="16,216,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+
+
+        <Button x:Name="btn_Ok" Content="Ок" HorizontalAlignment="Right" Margin="0,225,125,10" VerticalAlignment="Bottom" Width="100" Height="25" Click="btn_Ok_Click" Grid.Column="1" Grid.Row="1"/>
         <Button x:Name="btn_Cancel" Content="Отмена" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Click="btn_Cancel_Click" Grid.Column="1" Grid.Row="1"/>
-
-
-
     </Grid>
 </Window>

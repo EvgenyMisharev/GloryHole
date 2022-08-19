@@ -51,6 +51,10 @@ namespace GloryHole
 
             GloryHoleWPF gloryHoleWPF = new GloryHoleWPF(revitLinkInstanceList, intersectionFamilySymbolList);
             gloryHoleWPF.ShowDialog();
+            if (gloryHoleWPF.DialogResult != true)
+            {
+                return Result.Cancelled;
+            }
 
             List<RevitLinkInstance> selectedRevitLinkInstance = gloryHoleWPF.SelectedRevitLinkInstances;
             if (selectedRevitLinkInstance.Count() == 0)
@@ -64,13 +68,17 @@ namespace GloryHole
             FamilySymbol intersectionFloorRectangularFamilySymbol = gloryHoleWPF.IntersectionFloorRectangularFamilySymbol;
             FamilySymbol intersectionFloorRoundFamilySymbol = gloryHoleWPF.IntersectionFloorRoundFamilySymbol;
 
-            double pipeSideClearance = 50 * 2 / 304.8;
-            double pipeTopBottomClearance = 50 * 2 / 304.8;
-            double ductSideClearance = 75 * 2 / 304.8;
-            double ductTopBottomClearance = 75 * 2 / 304.8;
-            double cableTraySideClearance = 50 * 2 / 304.8;
-            double cableTrayTopBottomClearance = 50 * 2 / 304.8;
-            double roundUpIncrement = 50;
+            double pipeSideClearance = gloryHoleWPF.PipeSideClearance * 2 / 304.8;
+            double pipeTopBottomClearance = gloryHoleWPF.PipeTopBottomClearance * 2 / 304.8;
+            double ductSideClearance = gloryHoleWPF.DuctSideClearance * 2 / 304.8;
+            double ductTopBottomClearance = gloryHoleWPF.DuctTopBottomClearance * 2 / 304.8;
+            double cableTraySideClearance = gloryHoleWPF.CableTraySideClearance * 2 / 304.8;
+            double cableTrayTopBottomClearance = gloryHoleWPF.CableTrayTopBottomClearance * 2 / 304.8;
+
+            string holeShapeButtonName = gloryHoleWPF.HoleShapeButtonName;
+            string roundHolesPositionButtonName = gloryHoleWPF.RoundHolesPositionButtonName;
+            double roundHoleSizesUpIncrement = gloryHoleWPF.RoundHoleSizesUpIncrement;
+            double RoundHolePosition = gloryHoleWPF.RoundHolePositionIncrement;
             double AdditionalToThickness = 20 / 304.8;
 
             //Получение трубопроводов, воздуховодов и кабельных лотков
@@ -154,49 +162,108 @@ namespace GloryHole
                                     SolidCurveIntersection intersection = transformGeomSolid.IntersectWithCurve(pipeCurve, scio);
                                     if (intersection.SegmentCount > 0)
                                     {
-                                        XYZ wallOrientation = wall.Orientation;
-                                        double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
-                                        double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundUpIncrement);
-                                        double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
-                                        double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
-
-                                        if (a > 90 && a < 180)
+                                        if(holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                         {
-                                            a = (180 - a) * (Math.PI / 180);
+                                            XYZ wallOrientation = wall.Orientation;
+                                            double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                            double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
+                                            double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
+                                            double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
+
+                                            if (a > 90 && a < 180)
+                                            {
+                                                a = (180 - a) * (Math.PI / 180);
+                                            }
+                                            else
+                                            {
+                                                a = a * (Math.PI / 180);
+                                            }
+                                            double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
+                                            double delta2 = Math.Abs((pipeDiameter / 2) / Math.Cos(a));
+                                            if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
+
+                                            XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                            XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                            XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
+
+                                            if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                            {
+                                                originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                            }
+                                            else
+                                            {
+                                                originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                            }
+
+                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                 , intersectionWallRectangularFamilySymbol
+                                                 , lvl
+                                                 , StructuralType.NonStructural) as FamilyInstance;
+                                            if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
+                                            {
+                                                Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
+                                                ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                            }
+
+                                            double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + pipeSideClearance, roundHoleSizesUpIncrement);
+                                            intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
+                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+                                            intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
+
+                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                            intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
+                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
                                         }
                                         else
                                         {
-                                            a = a * (Math.PI / 180);
+                                            XYZ wallOrientation = wall.Orientation;
+                                            double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                            double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
+                                            double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
+
+                                            if (a > 90 && a < 180)
+                                            {
+                                                a = (180 - a) * (Math.PI / 180);
+                                            }
+                                            else
+                                            {
+                                                a = a * (Math.PI / 180);
+                                            }
+                                            double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
+                                            double delta2 = Math.Abs((pipeDiameter / 2) / Math.Cos(a));
+                                            if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
+
+                                            XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                            XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                            XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) ;
+
+                                            if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                            {
+                                                originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                            }
+                                            else
+                                            {
+                                                originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                            }
+
+                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                 , intersectionWallRoundFamilySymbol
+                                                 , lvl
+                                                 , StructuralType.NonStructural) as FamilyInstance;
+                                            if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
+                                            {
+                                                Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
+                                                ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                            }
+
+                                            double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + pipeSideClearance, roundHoleSizesUpIncrement);
+                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+                                            intersectionPoint.get_Parameter(intersectionPointDiameterGuid).Set(intersectionPointWidth);
+
+                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                            intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
+                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
                                         }
-                                        double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
-                                        double delta2 = Math.Abs((pipeDiameter / 2) / Math.Cos(a));
-                                        if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
-
-                                        XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
-                                        XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
-                                        XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
-
-                                        //НУЖНО ЛИ ОКРУГЛЯТЬ ОТМЕТКУ и положение?????
-                                        originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, RoundToIncrement(originIntersectionCurve.Z, 10) - lvl.Elevation);
-
-                                        FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
-                                             , intersectionWallRectangularFamilySymbol
-                                             , lvl
-                                             , StructuralType.NonStructural) as FamilyInstance;
-                                        if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
-                                        {
-                                            Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                            ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
-                                        }
-
-                                        double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + pipeSideClearance, roundUpIncrement);
-                                        intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
-                                        intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                        intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
-
-                                        intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
-                                        intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
-                                        intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
                                     }
                                 }
 
@@ -210,56 +277,116 @@ namespace GloryHole
                                         XYZ wallOrientation = wall.Orientation;
                                         if (duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM) != null)
                                         {
-                                            double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
-
-                                            double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundUpIncrement);
-                                            double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
-
-                                            double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
-
-                                            if (a > 90 && a < 180)
+                                            if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                             {
-                                                a = (180 - a) * (Math.PI / 180);
+                                                double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+
+                                                double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
+                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
+
+                                                double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
+
+                                                if (a > 90 && a < 180)
+                                                {
+                                                    a = (180 - a) * (Math.PI / 180);
+                                                }
+                                                else
+                                                {
+                                                    a = a * (Math.PI / 180);
+                                                }
+                                                double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
+                                                double delta2 = Math.Abs((ductDiameter / 2) / Math.Cos(a));
+                                                if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
+
+                                                XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                                XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                                XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
+
+                                                if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                                {
+                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                }
+                                                else
+                                                {
+                                                    originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                                }
+
+                                                FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                    , intersectionWallRectangularFamilySymbol
+                                                    , lvl
+                                                    , StructuralType.NonStructural) as FamilyInstance;
+                                                if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
+                                                {
+                                                    Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
+                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                }
+
+                                                double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
+                                                intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
+                                                intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+                                                intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
+
+                                                intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                                intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
+                                                intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
                                             }
                                             else
                                             {
-                                                a = a * (Math.PI / 180);
+                                                ///Вооооот сюда
+                                                double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
+                                                double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
+
+                                                if (a > 90 && a < 180)
+                                                {
+                                                    a = (180 - a) * (Math.PI / 180);
+                                                }
+                                                else
+                                                {
+                                                    a = a * (Math.PI / 180);
+                                                }
+                                                double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
+                                                double delta2 = Math.Abs((ductDiameter / 2) / Math.Cos(a));
+                                                if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
+
+                                                XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                                XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                                XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2);
+
+                                                if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                                {
+                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                }
+                                                else
+                                                {
+                                                    originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                                }
+
+                                                FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                    , intersectionWallRoundFamilySymbol
+                                                    , lvl
+                                                    , StructuralType.NonStructural) as FamilyInstance;
+                                                if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
+                                                {
+                                                    Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
+                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                }
+
+                                                double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
+                                                intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+                                                intersectionPoint.get_Parameter(intersectionPointDiameterGuid).Set(intersectionPointWidth);
+
+                                                intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                                intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
+                                                intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
                                             }
-                                            double delta1 = Math.Abs((wall.Width / 2) * Math.Tan(a));
-                                            double delta2 = Math.Abs((ductDiameter / 2) / Math.Cos(a));
-                                            if (delta1 >= 9.84251968504 || delta2 >= 9.84251968504) continue;
-
-                                            XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
-                                            XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
-                                            XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
-
-                                            //НУЖНО ЛИ ОКРУГЛЯТЬ ОТМЕТКУ и положение?????
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, RoundToIncrement(originIntersectionCurve.Z, 10) - lvl.Elevation);
-
-                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
-                                                , intersectionWallRectangularFamilySymbol
-                                                , lvl
-                                                , StructuralType.NonStructural) as FamilyInstance;
-                                            if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
-                                            {
-                                                Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
-                                            }
-
-                                            double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundUpIncrement);
-                                            intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
-                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                            intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
-
-                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
-                                            intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_ELEVATION_PARAM).Set(originIntersectionCurve.Z);
-                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(originIntersectionCurve.Z);
+                                            
                                         }
                                         else
                                         {
                                             double ductHeight = duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble();
                                             double ductWidth = duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble();
-                                            double intersectionPointHeight = RoundUpToIncrement(ductHeight + ductTopBottomClearance, roundUpIncrement);
+                                            double intersectionPointHeight = RoundUpToIncrement(ductHeight + ductTopBottomClearance, roundHoleSizesUpIncrement);
                                             double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
 
                                             double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
@@ -280,9 +407,15 @@ namespace GloryHole
                                             XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
                                             XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
                                             XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
-                                            
-                                            //Нужно ли округлять положение????
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, RoundToIncrement(originIntersectionCurve.Z, 10) - lvl.Elevation);
+
+                                            if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                            {
+                                                originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                            }
+                                            else
+                                            {
+                                                originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                            }
 
                                             FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
                                                 , intersectionWallRectangularFamilySymbol
@@ -294,7 +427,7 @@ namespace GloryHole
                                                 ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
                                             }
 
-                                            double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundUpIncrement);
+                                            double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
                                             intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
                                             intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
                                             intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
@@ -316,7 +449,7 @@ namespace GloryHole
                                         XYZ wallOrientation = wall.Orientation;
                                         double cableTrayHeight = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble();
                                         double cableTrayWidth = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble();
-                                        double intersectionPointHeight = RoundUpToIncrement(cableTrayHeight + cableTrayTopBottomClearance, roundUpIncrement);
+                                        double intersectionPointHeight = RoundUpToIncrement(cableTrayHeight + cableTrayTopBottomClearance, roundHoleSizesUpIncrement);
                                         double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 1);
 
                                         double a = Math.Round((wallOrientation.AngleTo((cableTrayCurve as Line).Direction)) * (180 / Math.PI), 6);
@@ -337,8 +470,14 @@ namespace GloryHole
                                         XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
                                         XYZ originIntersectionCurve = ((intersectionCurveStartPoint + intersectionCurveEndPoint) / 2) - (intersectionPointHeight / 2) * XYZ.BasisZ;
 
-                                        //Нужно ли округлять положение????
-                                        originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, RoundToIncrement(originIntersectionCurve.Z, 10) - lvl.Elevation);
+                                        if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                        {
+                                            originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                        }
+                                        else
+                                        {
+                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation);
+                                        }
                                         
                                         FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
                                             , intersectionWallRectangularFamilySymbol
@@ -350,7 +489,7 @@ namespace GloryHole
                                             ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
                                         }
 
-                                        double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + cableTraySideClearance, roundUpIncrement);
+                                        double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + cableTraySideClearance, roundHoleSizesUpIncrement);
                                         intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
                                         intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
                                         intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
@@ -408,17 +547,10 @@ namespace GloryHole
         {
             return (Math.Round((x * 304.8) / m) * m) / 304.8;
         }
+
         private double RoundUpToIncrement(double x, double m)
         {
-            double a = (x * 304.8) % m;
-            if (Math.Round(a, 6) != 0)
-            {
-                return (Math.Round((x * 304.8) / m) * m + m) / 304.8;
-            }
-            else
-            {
-                return x;
-            }
+            return (((int)Math.Ceiling(x * 304.8 / m)) * m) / 304.8;
         }
     }
 }
