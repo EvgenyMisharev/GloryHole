@@ -3,6 +3,7 @@
   <IntersectionWallRectangularFamilySymbolName>ВК</IntersectionWallRectangularFamilySymbolName>
   <IntersectionWallRoundFamilySymbolName>ВК</IntersectionWallRoundFamilySymbolName>
   <IntersectionFloorRectangularFamilySymbolName>ВК</IntersectionFloorRectangularFamilySymbolName>
+  <IntersectionFloorRoundFamilySymbolName>ВК</IntersectionFloorRoundFamilySymbolName>
   <HoleShapeButtonName>radioButton_HoleShapeRound</HoleShapeButtonName>
   <RoundHolesPositionButtonName>radioButton_RoundHolesPositionNo</RoundHolesPositionButtonName>
   <RoundHoleSizesUpIncrementValue>50</RoundHoleSizesUpIncrementValue>

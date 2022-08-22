@@ -8,8 +8,6 @@ using Autodesk.Revit.UI.Selection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GloryHole
 {
@@ -521,43 +519,73 @@ namespace GloryHole
 
                                     if (intersection.SegmentCount > 0)
                                     {
-                                        double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
-                                        double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
-                                        double intersectionPointWidth = RoundUpToIncrement(pipeDiameter + pipeSideClearance, roundHoleSizesUpIncrement);
-                                        double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
-
-                                        XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
-                                        XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
-                                        XYZ originIntersectionCurve = null;
-
-                                        if (intersectionCurveStartPoint.Z > intersectionCurveEndPoint.Z)
+                                        if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                         {
-                                            originIntersectionCurve = intersectionCurveStartPoint;
+                                            double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                            double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
+                                            double intersectionPointWidth = RoundUpToIncrement(pipeDiameter + pipeSideClearance, roundHoleSizesUpIncrement);
+                                            double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
+
+                                            XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                            XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                            XYZ originIntersectionCurve = null;
+
+                                            if (intersectionCurveStartPoint.Z > intersectionCurveEndPoint.Z)
+                                            {
+                                                originIntersectionCurve = intersectionCurveStartPoint;
+                                            }
+                                            else
+                                            {
+                                                originIntersectionCurve = intersectionCurveEndPoint;
+                                            }
+
+                                            Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
+                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation + 50 / 304.8);
+                                            
+                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                            , intersectionFloorRectangularFamilySymbol
+                                            , lvl
+                                            , StructuralType.NonStructural) as FamilyInstance;
+                                            intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
+                                            intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
+                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+
+                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
                                         }
                                         else
                                         {
-                                            originIntersectionCurve = intersectionCurveEndPoint;
-                                        }
-                                        if (Math.Round(originIntersectionCurve.Z, 6) >= 0)
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, 50 / 304.8);
-                                        }
-                                        else
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, -50 / 304.8);
+                                            double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                            double intersectionPointWidth = RoundUpToIncrement(pipeDiameter + pipeSideClearance, roundHoleSizesUpIncrement);
+                                            double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
+
+                                            XYZ intersectionCurveStartPoint = intersection.GetCurveSegment(0).GetEndPoint(0);
+                                            XYZ intersectionCurveEndPoint = intersection.GetCurveSegment(0).GetEndPoint(1);
+                                            XYZ originIntersectionCurve = null;
+
+                                            if (intersectionCurveStartPoint.Z > intersectionCurveEndPoint.Z)
+                                            {
+                                                originIntersectionCurve = intersectionCurveStartPoint;
+                                            }
+                                            else
+                                            {
+                                                originIntersectionCurve = intersectionCurveEndPoint;
+                                            }
+
+                                            Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
+                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation + 50 / 304.8);
+
+                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                            , intersectionFloorRoundFamilySymbol
+                                            , lvl
+                                            , StructuralType.NonStructural) as FamilyInstance;
+                                            intersectionPoint.get_Parameter(intersectionPointDiameterGuid).Set(intersectionPointWidth);
+                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+
+                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
                                         }
 
-                                        Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
-                                        FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
-                                        , intersectionFloorRectangularFamilySymbol
-                                        , lvl
-                                        , StructuralType.NonStructural) as FamilyInstance;
-                                        intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
-                                        intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
-                                        intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                        intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-                                            .Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble()
-                                            + floor.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble());
                                     }
                                 }
 
@@ -581,33 +609,46 @@ namespace GloryHole
                                         {
                                             originIntersectionCurve = intersectionCurveEndPoint;
                                         }
-                                        if (Math.Round(originIntersectionCurve.Z, 6) >= 0)
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, 50 / 304.8);
-                                        }
-                                        else
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, -50 / 304.8);
-                                        }
+
+                                        Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
+                                        originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation + 50 / 304.8);
 
                                         if (duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM) != null)
                                         {
-                                            double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
-                                            double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
-                                            double intersectionPointWidth = RoundUpToIncrement(ductDiameter + ductSideClearance, roundHoleSizesUpIncrement);
-                                            double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
+                                            if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
+                                            {
+                                                double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
+                                                double intersectionPointWidth = RoundUpToIncrement(ductDiameter + ductSideClearance, roundHoleSizesUpIncrement);
+                                                double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
 
-                                            Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
-                                            FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
-                                                , intersectionFloorRectangularFamilySymbol
-                                                , lvl
-                                                , StructuralType.NonStructural) as FamilyInstance;
-                                            intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
-                                            intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
-                                            intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                            intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-                                                .Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble()
-                                                + floor.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble());
+                                                FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                    , intersectionFloorRectangularFamilySymbol
+                                                    , lvl
+                                                    , StructuralType.NonStructural) as FamilyInstance;
+                                                intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
+                                                intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
+                                                intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+
+                                                intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                                intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                            }  
+                                            else
+                                            {
+                                                double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                double intersectionPointWidth = RoundUpToIncrement(ductDiameter + ductSideClearance, roundHoleSizesUpIncrement);
+                                                double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
+
+                                                FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
+                                                    , intersectionFloorRoundFamilySymbol
+                                                    , lvl
+                                                    , StructuralType.NonStructural) as FamilyInstance;
+                                                intersectionPoint.get_Parameter(intersectionPointDiameterGuid).Set(intersectionPointWidth);
+                                                intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+
+                                                intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                                intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                            }
                                         }
                                         else 
                                         {
@@ -618,7 +659,6 @@ namespace GloryHole
                                             double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
                                             double ductRotationAngle = GetAngleFromMEPCurve(duct as MEPCurve);
 
-                                            Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
                                             FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
                                                 , intersectionFloorRectangularFamilySymbol
                                                 , lvl
@@ -626,9 +666,9 @@ namespace GloryHole
                                             intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
                                             intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
                                             intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                            intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-                                                .Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble()
-                                                + floor.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble());
+
+                                            intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                            intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
 
                                             if (ductRotationAngle != 0)
                                             {
@@ -662,14 +702,9 @@ namespace GloryHole
                                         {
                                             originIntersectionCurve = intersectionCurveEndPoint;
                                         }
-                                        if (Math.Round(originIntersectionCurve.Z, 6) >= 0)
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, 50 / 304.8);
-                                        }
-                                        else
-                                        {
-                                            originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, -50 / 304.8);
-                                        }
+
+                                        Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
+                                        originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation + 50 / 304.8);
 
                                         double cableTrayHeight = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble();
                                         double cableTrayWidth = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble();
@@ -678,7 +713,6 @@ namespace GloryHole
                                         double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
                                         double cableTrayRotationAngle = GetAngleFromMEPCurve(cableTray as MEPCurve);
 
-                                        Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
                                         FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(originIntersectionCurve
                                             , intersectionFloorRectangularFamilySymbol
                                             , lvl
@@ -686,9 +720,9 @@ namespace GloryHole
                                         intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
                                         intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
                                         intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
-                                        intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-                                            .Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble()
-                                            + floor.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM).AsDouble());
+
+                                        intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
+                                        intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
 
                                         if (cableTrayRotationAngle != 0)
                                         {

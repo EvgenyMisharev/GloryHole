@@ -58,8 +58,8 @@
                     <ColumnDefinition Width="119*"/>
                     <ColumnDefinition Width="134*"/>
                 </Grid.ColumnDefinitions>
-                <RadioButton x:Name="radioButton_RoundHolesPositionYes" Content="Да" HorizontalAlignment="Center" Margin="26.878,1,42,1" VerticalAlignment="Center" IsChecked="True" Height="25" Width="50" VerticalContentAlignment="Center" Checked="radioButton_RoundHolesPosition_Checked" Grid.Column="1" />
-                <RadioButton x:Name="radioButton_RoundHolesPositionNo" Content="Нет" Margin="42,1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Width="50" Height="25" VerticalContentAlignment="Center" IsChecked="True" Checked="radioButton_RoundHolesPosition_Checked"/>
+                <RadioButton x:Name="radioButton_RoundHolesPositionYes" Content="Да" HorizontalAlignment="Center" Margin="26.878,1,42,1" VerticalAlignment="Center" IsChecked="True" Height="25" Width="45" VerticalContentAlignment="Center" Checked="radioButton_RoundHolesPosition_Checked" Grid.Column="1" />
+                <RadioButton x:Name="radioButton_RoundHolesPositionNo" Content="Нет" Margin="42,1" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Width="45" Height="25" VerticalContentAlignment="Center" IsChecked="True" Checked="radioButton_RoundHolesPosition_Checked"/>
             </Grid>
         </GroupBox>
 
