@@ -62,9 +62,29 @@ namespace GloryHole
             }
 
             FamilySymbol intersectionWallRectangularFamilySymbol = gloryHoleWPF.IntersectionWallRectangularFamilySymbol;
+            if(intersectionWallRectangularFamilySymbol == null)
+            {
+                TaskDialog.Show("Ravit", "Не найден тип для прямоугольного отверстия в стене! Загрузите семейство \"Пересечение_Стена_Прямоугольное\"!");
+                return Result.Cancelled;
+            }
             FamilySymbol intersectionWallRoundFamilySymbol = gloryHoleWPF.IntersectionWallRoundFamilySymbol;
+            if (intersectionWallRoundFamilySymbol == null)
+            {
+                TaskDialog.Show("Ravit", "Не найден тип для круглого отверстия в стене! Загрузите семейство \"Пересечение_Стена_Круглое\"!");
+                return Result.Cancelled;
+            }
             FamilySymbol intersectionFloorRectangularFamilySymbol = gloryHoleWPF.IntersectionFloorRectangularFamilySymbol;
+            if (intersectionFloorRectangularFamilySymbol == null)
+            {
+                TaskDialog.Show("Ravit", "Не найден тип для прямоугольного отверстия в плите! Загрузите семейство \"Пересечение_Плита_Прямоугольное\"!");
+                return Result.Cancelled;
+            }
             FamilySymbol intersectionFloorRoundFamilySymbol = gloryHoleWPF.IntersectionFloorRoundFamilySymbol;
+            if (intersectionFloorRoundFamilySymbol == null)
+            {
+                TaskDialog.Show("Ravit", "Не найден тип для круглого отверстия в плите! Загрузите семейство \"Пересечение_Плита_Круглое\"!");
+                return Result.Cancelled;
+            }
 
             double pipeSideClearance = gloryHoleWPF.PipeSideClearance * 2 / 304.8;
             double pipeTopBottomClearance = gloryHoleWPF.PipeTopBottomClearance * 2 / 304.8;
