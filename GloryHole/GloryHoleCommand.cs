@@ -19,7 +19,7 @@ namespace GloryHole
             // Получение текущего документа
             Document doc = commandData.Application.ActiveUIDocument.Document;
             //Получение доступа к Selection
-            Selection sel = commandData.Application.ActiveUIDocument.Selection;
+            Selection sel = commandData.Application.ActiveUIDocument.Selection; 
             //Общие параметры размеров
             Guid intersectionPointWidthGuid = new Guid("8f2e4f93-9472-4941-a65d-0ac468fd6a5d");
             Guid intersectionPointHeightGuid = new Guid("da753fe3-ecfa-465b-9a2c-02f55d0c2ff1");

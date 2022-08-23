@@ -10,6 +10,7 @@ namespace GloryHole
 {
     public class GloryHoleSettings
     {
+        public List<string> SelectedRevitLinkInstancesNames;
         public string IntersectionWallRectangularFamilySymbolName { get; set; }
         public string IntersectionWallRoundFamilySymbolName { get; set; }
         public string IntersectionFloorRectangularFamilySymbolName { get; set; }

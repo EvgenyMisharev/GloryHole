@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 <GloryHoleSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SelectedRevitLinkInstancesNames>
+    <string>Проект КР.rvt : 4 : позиция &lt;Не общедоступное&gt;</string>
+  </SelectedRevitLinkInstancesNames>
   <IntersectionWallRectangularFamilySymbolName>ВК</IntersectionWallRectangularFamilySymbolName>
   <IntersectionWallRoundFamilySymbolName>ВК</IntersectionWallRoundFamilySymbolName>
   <IntersectionFloorRectangularFamilySymbolName>ВК</IntersectionFloorRectangularFamilySymbolName>
   <IntersectionFloorRoundFamilySymbolName>ВК</IntersectionFloorRoundFamilySymbolName>
-  <HoleShapeButtonName>radioButton_HoleShapeRound</HoleShapeButtonName>
+  <HoleShapeButtonName>radioButton_HoleShapeRectangular</HoleShapeButtonName>
   <RoundHolesPositionButtonName>radioButton_RoundHolesPositionNo</RoundHolesPositionButtonName>
   <RoundHoleSizesUpIncrementValue>50</RoundHoleSizesUpIncrementValue>
   <RoundHolePositionIncrementValue>10</RoundHolePositionIncrementValue>

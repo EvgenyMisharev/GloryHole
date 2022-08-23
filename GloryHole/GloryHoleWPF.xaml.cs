@@ -164,6 +164,13 @@ namespace GloryHole
 
             double.TryParse(textBox_CableTrayTopBottomClearance.Text, out CableTrayTopBottomClearance);
             GloryHoleSettingsItem.CableTrayTopBottomClearanceValue = textBox_CableTrayTopBottomClearance.Text;
+
+            List<string> rliNamesList = new List<string>();
+            foreach (RevitLinkInstance rli in SelectedRevitLinkInstances)
+            {
+                rliNamesList.Add(rli.Name);
+            }
+            GloryHoleSettingsItem.SelectedRevitLinkInstancesNames = rliNamesList;
             GloryHoleSettingsItem.SaveSettings();
         }
 
@@ -312,7 +319,15 @@ namespace GloryHole
             {
                 textBox_CableTrayTopBottomClearance.Text = "50";
             }
-    }
+
+            foreach (RevitLinkInstance item in listBox_RevitLinkInstance.Items)
+            {
+                if (GloryHoleSettingsItem.SelectedRevitLinkInstancesNames.Contains((item as RevitLinkInstance).Name))
+                {
+                    listBox_RevitLinkInstance.SelectedItems.Add(item);
+                }
+            }
+        }
 
         private void btn_Ok_Click(object sender, RoutedEventArgs e)
         {
