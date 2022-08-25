@@ -322,9 +322,12 @@ namespace GloryHole
 
             foreach (RevitLinkInstance item in listBox_RevitLinkInstance.Items)
             {
-                if (GloryHoleSettingsItem.SelectedRevitLinkInstancesNames.Contains((item as RevitLinkInstance).Name))
+                if(GloryHoleSettingsItem.SelectedRevitLinkInstancesNames != null && GloryHoleSettingsItem.SelectedRevitLinkInstancesNames.Count != 0)
                 {
-                    listBox_RevitLinkInstance.SelectedItems.Add(item);
+                    if (GloryHoleSettingsItem.SelectedRevitLinkInstancesNames.Contains((item as RevitLinkInstance).Name))
+                    {
+                        listBox_RevitLinkInstance.SelectedItems.Add(item);
+                    }
                 }
             }
         }
