@@ -23,11 +23,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
- <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2019|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'R2019|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\R2019\</OutputPath>
+    <OutputPath>..\</OutputPath>
     <DefineConstants>DEBUG;R2019</DefineConstants>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <AssemblyName>$(AssemblyName)</AssemblyName>
@@ -151,7 +151,7 @@
         </Reference>
       </ItemGroup>
     </When>
-	    <When Condition=" '$(Configuration)'=='R2023' ">
+    <When Condition=" '$(Configuration)'=='R2023' ">
       <ItemGroup>
         <Reference Include="RevitAPI">
           <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
@@ -167,7 +167,7 @@
         </Reference>
       </ItemGroup>
     </When>
-  </Choose>  
+  </Choose>
   <ItemGroup>
     <Compile Include="AlphanumComparatorFastString.cs" />
     <Compile Include="GloryHoleCommand.cs" />

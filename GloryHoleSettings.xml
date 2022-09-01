@@ -8,7 +8,7 @@
   <IntersectionWallRoundFamilySymbolName>ВК</IntersectionWallRoundFamilySymbolName>
   <IntersectionFloorRectangularFamilySymbolName>ВК</IntersectionFloorRectangularFamilySymbolName>
   <IntersectionFloorRoundFamilySymbolName>ВК</IntersectionFloorRoundFamilySymbolName>
-  <HoleShapeButtonName>radioButton_HoleShapeRound</HoleShapeButtonName>
+  <HoleShapeButtonName>radioButton_HoleShapeRectangular</HoleShapeButtonName>
   <RoundHolesPositionButtonName>radioButton_RoundHolesPositionNo</RoundHolesPositionButtonName>
   <RoundHoleSizesUpIncrementValue>50</RoundHoleSizesUpIncrementValue>
   <RoundHolePositionIncrementValue>10</RoundHolePositionIncrementValue>
@@ -18,4 +18,5 @@
   <DuctTopBottomClearanceValue>75</DuctTopBottomClearanceValue>
   <CableTraySideClearanceValue>50</CableTraySideClearanceValue>
   <CableTrayTopBottomClearanceValue>50</CableTrayTopBottomClearanceValue>
+  <CombineHolesValue>true</CombineHolesValue>
 </GloryHoleSettings>

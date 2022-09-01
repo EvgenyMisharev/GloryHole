@@ -26,6 +26,7 @@ namespace GloryHole
         public string DuctTopBottomClearanceValue { get; set; }
         public string CableTraySideClearanceValue { get; set; }
         public string CableTrayTopBottomClearanceValue { get; set; }
+        public bool CombineHolesValue { get; set; }
 
         public GloryHoleSettings GetSettings()
         {

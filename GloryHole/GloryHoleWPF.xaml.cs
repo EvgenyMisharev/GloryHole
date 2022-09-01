@@ -46,6 +46,8 @@ namespace GloryHole
         public double CableTraySideClearance;
         public double CableTrayTopBottomClearance;
 
+        public bool CombineHoles;
+
         GloryHoleSettings GloryHoleSettingsItem;
 
 
@@ -171,6 +173,18 @@ namespace GloryHole
                 rliNamesList.Add(rli.Name);
             }
             GloryHoleSettingsItem.SelectedRevitLinkInstancesNames = rliNamesList;
+
+            if (checkBox_CombineHoles.IsChecked == true)
+            {
+                CombineHoles = true;
+                GloryHoleSettingsItem.CombineHolesValue = true;
+            }
+            else
+            {
+                CombineHoles = false;
+                GloryHoleSettingsItem.CombineHolesValue = false;
+            }
+
             GloryHoleSettingsItem.SaveSettings();
         }
 
@@ -329,6 +343,15 @@ namespace GloryHole
                         listBox_RevitLinkInstance.SelectedItems.Add(item);
                     }
                 }
+            }
+            
+            if (GloryHoleSettingsItem.CombineHolesValue == true)
+            {
+                checkBox_CombineHoles.IsChecked = true;
+            }
+            else
+            {
+                checkBox_CombineHoles.IsChecked = false;
             }
         }
 

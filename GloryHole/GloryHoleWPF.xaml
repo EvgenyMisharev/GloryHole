@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              Title="Задание на отверстия"
              WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen"
-             Height="530" Width="600" MinHeight="530" MinWidth="600" MaxHeight="530" MaxWidth="600"
+             Height="550" Width="600" MinHeight="550" MinWidth="600" MaxHeight="550" MaxWidth="600"
              KeyDown="Window_KeyDown">
 
     <Grid Margin="0">
@@ -51,7 +51,7 @@
         <TextBox x:Name="textBox_RoundHolePositionIncrement" HorizontalAlignment="Left" Height="26" Margin="220,160,0,0" Grid.Row="1" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="1" IsEnabled="False"/>
         <Label x:Name="label_RoundHolePositionMM" Content="мм" Grid.Column="1" HorizontalAlignment="Left" Margin="260,160,0,0" Grid.Row="1" VerticalAlignment="Top" Width="30" Height="26" VerticalContentAlignment="Center" IsEnabled="False"/>
 
-        <GroupBox x:Name="groupBox_RoundHolesPosition" Grid.Column="1" Header="Округлять положение отверстий:" Height="50" Margin="10,104,10,0" Grid.Row="1" VerticalAlignment="Top" BorderBrush="#FFABADB3">
+        <GroupBox x:Name="groupBox_RoundHolesPosition" Grid.Column="1" Header="Округлять положение отверстий:" Height="50" Margin="10,105,10,0" Grid.Row="1" VerticalAlignment="Top" BorderBrush="#FFABADB3">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="15*"/>
@@ -63,6 +63,8 @@
             </Grid>
         </GroupBox>
 
+        <CheckBox x:Name="checkBox_CombineHoles" Content="Объединить пересекающиеся отверстия" Grid.Column="1" HorizontalAlignment="Left" Margin="10,195,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        
         <Image x:Name="image" Margin="10,10,0,0" Grid.Row="1" Source="Resources/GloryHoleCommandImage.png" Width="276" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_PipeSideClearance" HorizontalAlignment="Left" Height="25" Margin="16,19,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <TextBox x:Name="textBox_PipeTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="16,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
@@ -78,5 +80,6 @@
 
         <Button x:Name="btn_Ok" Content="Ок" HorizontalAlignment="Right" Margin="0,225,125,10" VerticalAlignment="Bottom" Width="100" Height="25" Click="btn_Ok_Click" Grid.Column="1" Grid.Row="1"/>
         <Button x:Name="btn_Cancel" Content="Отмена" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="100" Height="25" Click="btn_Cancel_Click" Grid.Column="1" Grid.Row="1"/>
+
     </Grid>
 </Window>
