@@ -134,6 +134,7 @@ namespace GloryHole
             List<FamilyInstance> intersectionWallRectangularList = new List<FamilyInstance>();
             List<FamilyInstance> intersectionWallRectangularCombineList = new List<FamilyInstance>();
             List<FamilyInstance> intersectionWallRoundList = new List<FamilyInstance>();
+            List<FamilyInstance> intersectionFloorRectangularCombineList = new List<FamilyInstance>();
 
 
             using (TransactionGroup tg = new TransactionGroup(doc))
@@ -192,7 +193,7 @@ namespace GloryHole
                                             if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                             {
                                                 XYZ wallOrientation = wall.Orientation;
-                                                double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                                double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
                                                 double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
@@ -246,7 +247,7 @@ namespace GloryHole
                                             else
                                             {
                                                 XYZ wallOrientation = wall.Orientation;
-                                                double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                                double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
                                                 double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
                                                 double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
 
@@ -309,7 +310,7 @@ namespace GloryHole
                                             {
                                                 if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                                 {
-                                                    double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                    double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
 
                                                     double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
                                                     double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
@@ -364,8 +365,7 @@ namespace GloryHole
                                                 }
                                                 else
                                                 {
-                                                    ///Вооооот сюда
-                                                    double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                    double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
                                                     double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
                                                     double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
 
@@ -417,8 +417,8 @@ namespace GloryHole
                                             }
                                             else
                                             {
-                                                double ductHeight = duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble();
-                                                double ductWidth = duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble();
+                                                double ductHeight = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble(), 6);
+                                                double ductWidth = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(ductHeight + ductTopBottomClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
 
@@ -482,8 +482,8 @@ namespace GloryHole
                                         if (intersection.SegmentCount > 0)
                                         {
                                             XYZ wallOrientation = wall.Orientation;
-                                            double cableTrayHeight = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble();
-                                            double cableTrayWidth = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble();
+                                            double cableTrayHeight = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble(), 6);
+                                            double cableTrayWidth = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble(), 6);
                                             double intersectionPointHeight = RoundUpToIncrement(cableTrayHeight + cableTrayTopBottomClearance, roundHoleSizesUpIncrement);
                                             double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
 
@@ -539,7 +539,7 @@ namespace GloryHole
                                 }
                             }
                         }
-                        //Завершение обработки стен
+
                         //Обработка перекрытий
                         foreach (Floor floor in floorsInLinkList)
                         {
@@ -560,7 +560,7 @@ namespace GloryHole
                                         {
                                             if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                             {
-                                                double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                                double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointWidth = RoundUpToIncrement(pipeDiameter + pipeSideClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
@@ -591,10 +591,11 @@ namespace GloryHole
 
                                                 intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
                                                 intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                                intersectionFloorRectangularCombineList.Add(intersectionPoint);
                                             }
                                             else
                                             {
-                                                double pipeDiameter = pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble();
+                                                double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
                                                 double intersectionPointWidth = RoundUpToIncrement(pipeDiameter + pipeSideClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
 
@@ -656,7 +657,7 @@ namespace GloryHole
                                             {
                                                 if (holeShapeButtonName == "radioButton_HoleShapeRectangular")
                                                 {
-                                                    double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                    double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
                                                     double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
                                                     double intersectionPointWidth = RoundUpToIncrement(ductDiameter + ductSideClearance, roundHoleSizesUpIncrement);
                                                     double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
@@ -671,10 +672,11 @@ namespace GloryHole
 
                                                     intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
                                                     intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                                    intersectionFloorRectangularCombineList.Add(intersectionPoint);
                                                 }
                                                 else
                                                 {
-                                                    double ductDiameter = duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble();
+                                                    double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
                                                     double intersectionPointWidth = RoundUpToIncrement(ductDiameter + ductSideClearance, roundHoleSizesUpIncrement);
                                                     double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
 
@@ -691,8 +693,8 @@ namespace GloryHole
                                             }
                                             else
                                             {
-                                                double ductHeight = duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble();
-                                                double ductWidth = duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble();
+                                                double ductHeight = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble(), 6);
+                                                double ductWidth = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(ductHeight + ductTopBottomClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointWidth = RoundUpToIncrement(ductWidth + ductSideClearance, roundHoleSizesUpIncrement);
                                                 double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
@@ -708,6 +710,7 @@ namespace GloryHole
 
                                                 intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
                                                 intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                                intersectionFloorRectangularCombineList.Add(intersectionPoint);
 
                                                 if (ductRotationAngle != 0)
                                                 {
@@ -745,8 +748,8 @@ namespace GloryHole
                                             Level lvl = GetClosestFloorLevel(docLvlList, linkDoc, floor);
                                             originIntersectionCurve = new XYZ(originIntersectionCurve.X, originIntersectionCurve.Y, originIntersectionCurve.Z - lvl.Elevation + 50 / 304.8);
 
-                                            double cableTrayHeight = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble();
-                                            double cableTrayWidth = cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble();
+                                            double cableTrayHeight = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble(), 6);
+                                            double cableTrayWidth = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble(), 6);
                                             double intersectionPointHeight = RoundUpToIncrement(cableTrayHeight + cableTrayTopBottomClearance, roundHoleSizesUpIncrement);
                                             double intersectionPointWidth = RoundUpToIncrement(cableTrayWidth + cableTraySideClearance, roundHoleSizesUpIncrement);
                                             double intersectionPointThickness = RoundToIncrement(floor.get_Parameter(BuiltInParameter.FLOOR_ATTR_THICKNESS_PARAM).AsDouble() + 100 / 304.8, 10);
@@ -762,6 +765,7 @@ namespace GloryHole
 
                                             intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set((doc.GetElement(intersectionPoint.LevelId) as Level).Elevation);
                                             intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+                                            intersectionFloorRectangularCombineList.Add(intersectionPoint);
 
                                             if (cableTrayRotationAngle != 0)
                                             {
@@ -1070,7 +1074,6 @@ namespace GloryHole
                             if (intersectionWallRectangularSolidIntersectCombineList.Count > 1)
                             {
                                 List<XYZ> pointsList = new List<XYZ>();
-                                XYZ summPoint = null;
                                 double intersectionPointThickness = 0;
 
                                 foreach (FamilyInstance intPount in intersectionWallRectangularSolidIntersectCombineList)
@@ -1079,67 +1082,128 @@ namespace GloryHole
 
                                     XYZ downLeftPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation;
                                     pointsList.Add(downLeftPoint);
-                                    if (summPoint == null)
-                                    {
-                                        summPoint = downLeftPoint;
-                                    }
-                                    else
-                                    {
-                                        summPoint += downLeftPoint;
-                                    }
 
                                     XYZ downRightPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation.Negate();
                                     pointsList.Add(downRightPoint);
-                                    summPoint += downRightPoint;
 
                                     XYZ upLeftPoint = originPoint + ((intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation)
                                         + intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() * XYZ.BasisZ;
                                     pointsList.Add(upLeftPoint);
-                                    summPoint += upLeftPoint;
 
                                     XYZ upRightPoint = originPoint + ((intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation.Negate())
                                         + intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() * XYZ.BasisZ;
                                     pointsList.Add(upRightPoint);
-                                    summPoint += upRightPoint;
 
                                     if (intPount.get_Parameter(intersectionPointThicknessGuid).AsDouble() > intersectionPointThickness)
                                     {
                                         intersectionPointThickness = intPount.get_Parameter(intersectionPointThicknessGuid).AsDouble();
                                     }
                                 }
-                                XYZ centroidIntersectionPoint = summPoint / (intersectionWallRectangularSolidIntersectCombineList.Count * 4);
+
+                                //Найти центр спроецировать точки на одну отметку и померить расстояние
+                                double maxHorizontalDistance = 0;
+                                double maxVerticalDistance = 0;
+                                XYZ pointP1 = null;
+                                XYZ pointP2 = null;
+                                XYZ pointP3 = null;
+                                XYZ pointP4 = null;
+                                foreach (XYZ p1 in pointsList)
+                                {
+                                    foreach(XYZ p2 in pointsList)
+                                    {
+                                        if(new XYZ(p1.X,p1.Y,0).DistanceTo(new XYZ(p2.X, p2.Y, 0)) > maxHorizontalDistance)
+                                        {
+                                            maxHorizontalDistance = new XYZ(p1.X, p1.Y, 0).DistanceTo(new XYZ(p2.X, p2.Y, 0));
+                                            pointP1 = p1;
+                                            pointP2 = p2;
+                                        }
+
+                                        if (new XYZ(0, 0, p1.Z).DistanceTo(new XYZ(0, 0, p2.Z)) > maxVerticalDistance)
+                                        {
+                                            maxVerticalDistance = new XYZ(0, 0, p1.Z).DistanceTo(new XYZ(0, 0, p2.Z));
+                                            pointP3 = p1;
+                                            pointP4 = p2;
+                                        }
+                                    }
+                                }
+                                XYZ midPointLeftRight = (pointP1 + pointP2) / 2;
+                                XYZ midPointUpDown = (pointP3 + pointP4) / 2;
+                                XYZ centroidIntersectionPoint = new XYZ(midPointLeftRight.X, midPointLeftRight.Y, midPointUpDown.Z);
+
+                                List<XYZ> combineDownLeftPointList = new List<XYZ>();
+                                List<XYZ> combineDownRightPointList = new List<XYZ>();
+                                List<XYZ> combineUpLeftPointList = new List<XYZ>();
+                                List<XYZ> combineUpRightPointList = new List<XYZ>();
+
+                                XYZ pointFacingOrientation = intersectionWallRectangularSolidIntersectCombineList.First().FacingOrientation;
+                                XYZ pointHandOrientation = intersectionWallRectangularSolidIntersectCombineList.First().HandOrientation;
+
+                                foreach (XYZ p in pointsList)
+                                {
+                                    XYZ vectorToPoint = (p - centroidIntersectionPoint).Normalize();
+
+                                    //Нижний левый угол
+                                    if (pointFacingOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineDownLeftPointList.Add(p);
+                                    }
+
+                                    //Нижний правый угол
+                                    if (pointFacingOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineDownRightPointList.Add(p);
+                                    }
+
+                                    //Верхний левый угол
+                                    if (pointFacingOrientation.AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineUpLeftPointList.Add(p);
+                                    }
+
+                                    //Верхний правый угол
+                                    if (pointFacingOrientation.AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineUpRightPointList.Add(p);
+                                    }
+                                }
+
+                                List<XYZ> maxRightPointList = new List<XYZ>();
+                                maxRightPointList.AddRange(combineDownRightPointList);
+                                maxRightPointList.AddRange(combineUpRightPointList);
+                                double maxRightDistance = -1000000;
+                                foreach (XYZ p in pointsList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointHandOrientation).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxRightDistance)
+                                    {
+                                        maxRightDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
+
+                                List<XYZ> maxLeftPointList = new List<XYZ>();
+                                maxLeftPointList.AddRange(combineDownLeftPointList);
+                                maxLeftPointList.AddRange(combineUpLeftPointList);
+                                double maxLeftDistance = -1000000;
+                                foreach (XYZ p in pointsList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointHandOrientation.Negate()).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxLeftDistance)
+                                    {
+                                        maxLeftDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
 
                                 double minZ = 10000000000;
                                 XYZ minZPoint = null;
                                 double maxZ = -10000000000;
                                 XYZ maxZPoint = null;
 
-                                double leftDistance = 0;
-                                XYZ maxLeftPoint = null;
-                                double rightDistance = 0;
-                                XYZ maxRightPoint = null;
-
                                 foreach (XYZ p in pointsList)
                                 {
-                                    XYZ pointHandOrientation = intersectionWallRectangularSolidIntersectCombineList.First().HandOrientation;
-                                    XYZ vectorToPoint = (new XYZ(p.X, p.Y, centroidIntersectionPoint.Z) - centroidIntersectionPoint).Normalize();
-                                    if (vectorToPoint.IsAlmostEqualTo(pointHandOrientation, 0.0001))
-                                    {
-                                        if (new XYZ(p.X, p.Y, centroidIntersectionPoint.Z).DistanceTo(centroidIntersectionPoint) > leftDistance)
-                                        {
-                                            leftDistance = new XYZ(p.X, p.Y, centroidIntersectionPoint.Z).DistanceTo(centroidIntersectionPoint);
-                                            maxLeftPoint = p;
-                                        }
-                                    }
-                                    if (vectorToPoint.IsAlmostEqualTo(pointHandOrientation.Negate(), 0.0001))
-                                    {
-                                        if (new XYZ(p.X, p.Y, centroidIntersectionPoint.Z).DistanceTo(centroidIntersectionPoint) > rightDistance)
-                                        {
-                                            rightDistance = new XYZ(p.X, p.Y, centroidIntersectionPoint.Z).DistanceTo(centroidIntersectionPoint);
-                                            maxRightPoint = p;
-                                        }
-                                    }
-
                                     if (p.Z < minZ)
                                     {
                                         minZ = p.Z;
@@ -1153,7 +1217,7 @@ namespace GloryHole
                                 }
 
                                 double intersectionPointHeight = RoundUpToIncrement(maxZPoint.Z - minZPoint.Z, roundHoleSizesUpIncrement);
-                                double intersectionPointWidth = RoundUpToIncrement(maxLeftPoint.DistanceTo(maxRightPoint), roundHoleSizesUpIncrement);
+                                double intersectionPointWidth = RoundUpToIncrement(maxLeftDistance + maxRightDistance, roundHoleSizesUpIncrement);
 
                                 XYZ newCenterPoint = null;
                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
@@ -1201,10 +1265,256 @@ namespace GloryHole
                                 intersectionWallRectangularCombineList.Remove(intersectionWallRectangularSolidIntersectCombineList[0]);
                             }
                         }
+
+                        while (intersectionFloorRectangularCombineList.Count != 0)
+                        {
+                            List<FamilyInstance> intersectionFloorRectangularSolidIntersectCombineList = new List<FamilyInstance>();
+                            intersectionFloorRectangularSolidIntersectCombineList.Add(intersectionFloorRectangularCombineList[0]);
+                            intersectionFloorRectangularCombineList.RemoveAt(0);
+
+                            List<FamilyInstance> tmpIntersectionFloorRectangularSolidIntersectCombineList = intersectionFloorRectangularCombineList.ToList();
+                            for (int i = 0; i < intersectionFloorRectangularSolidIntersectCombineList.Count; i++)
+                            {
+                                FamilyInstance firstIntersectionPoint = intersectionFloorRectangularSolidIntersectCombineList[i];
+                                Solid firstIntersectionPointSolid = null;
+                                GeometryElement firstIntersectionPointGeomElem = firstIntersectionPoint.get_Geometry(opt);
+                                foreach (GeometryObject geomObj in firstIntersectionPointGeomElem)
+                                {
+                                    GeometryInstance instance = geomObj as GeometryInstance;
+                                    if (null != instance)
+                                    {
+                                        GeometryElement instanceGeometryElement = instance.GetInstanceGeometry();
+                                        foreach (GeometryObject o in instanceGeometryElement)
+                                        {
+                                            Solid solid = o as Solid;
+                                            if (solid != null && solid.Volume != 0)
+                                            {
+                                                firstIntersectionPointSolid = solid;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                for (int j = 0; j < tmpIntersectionFloorRectangularSolidIntersectCombineList.Count; j++)
+                                {
+                                    FamilyInstance secondIntersectionPoint = tmpIntersectionFloorRectangularSolidIntersectCombineList[j];
+                                    Solid secondIntersectionPointSolid = null;
+                                    GeometryElement secondIntersectionPointGeomElem = secondIntersectionPoint.get_Geometry(opt);
+                                    foreach (GeometryObject geomObj in secondIntersectionPointGeomElem)
+                                    {
+                                        GeometryInstance instance = geomObj as GeometryInstance;
+                                        if (null != instance)
+                                        {
+                                            GeometryElement instanceGeometryElement = instance.GetInstanceGeometry();
+                                            foreach (GeometryObject o in instanceGeometryElement)
+                                            {
+                                                Solid solid = o as Solid;
+                                                if (solid != null && solid.Volume != 0)
+                                                {
+                                                    secondIntersectionPointSolid = solid;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    double unionvolume = BooleanOperationsUtils.ExecuteBooleanOperation(firstIntersectionPointSolid
+                                        , secondIntersectionPointSolid, BooleanOperationsType.Intersect).Volume;
+
+                                    if (unionvolume > 0)
+                                    {
+                                        intersectionFloorRectangularSolidIntersectCombineList.Add(secondIntersectionPoint);
+                                        tmpIntersectionFloorRectangularSolidIntersectCombineList.Remove(secondIntersectionPoint);
+                                        i = 0;
+                                        j = 0;
+                                    }
+                                }
+                            }
+
+                            if (intersectionFloorRectangularSolidIntersectCombineList.Count > 1)
+                            {
+                                List<XYZ> pointsList = new List<XYZ>();
+                                double intersectionPointThickness = 0;
+
+                                foreach (FamilyInstance intPount in intersectionFloorRectangularSolidIntersectCombineList)
+                                {
+                                    XYZ originPoint = (intPount.Location as LocationPoint).Point;
+
+                                    XYZ downLeftPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation.Negate()
+                                        + (intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() / 2) * intPount.FacingOrientation.Negate();
+                                    pointsList.Add(downLeftPoint);
+
+                                    XYZ downRightPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation
+                                        + (intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() / 2) * intPount.FacingOrientation.Negate();
+                                    pointsList.Add(downRightPoint);
+
+                                    XYZ upLeftPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation.Negate()
+                                        + (intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() / 2) * intPount.FacingOrientation;
+                                    pointsList.Add(upLeftPoint);
+
+                                    XYZ upRightPoint = originPoint + (intPount.get_Parameter(intersectionPointWidthGuid).AsDouble() / 2) * intPount.HandOrientation
+                                        + (intPount.get_Parameter(intersectionPointHeightGuid).AsDouble() / 2) * intPount.FacingOrientation;
+                                    pointsList.Add(upRightPoint);
+
+                                    if (intPount.get_Parameter(intersectionPointThicknessGuid).AsDouble() > intersectionPointThickness)
+                                    {
+                                        intersectionPointThickness = intPount.get_Parameter(intersectionPointThicknessGuid).AsDouble();
+                                    }
+                                }
+                                double maxX  = pointsList.Max(p => p.X);
+                                double minX = pointsList.Min(p => p.X);
+                                double maxY = pointsList.Max(p => p.Y);
+                                double minY = pointsList.Min(p => p.Y);
+                                XYZ centroidIntersectionPoint = new XYZ((maxX + minX)/2,(maxY + minY) /2, pointsList.First().Z);
+
+                                List<XYZ> combineDownLeftPointList = new List<XYZ>();
+                                List<XYZ> combineDownRightPointList = new List<XYZ>();
+                                List<XYZ> combineUpLeftPointList = new List<XYZ>();
+                                List<XYZ> combineUpRightPointList = new List<XYZ>();
+
+                                XYZ pointFacingOrientation = intersectionFloorRectangularSolidIntersectCombineList.First().FacingOrientation;
+                                XYZ pointHandOrientation = intersectionFloorRectangularSolidIntersectCombineList.First().HandOrientation;
+                                Level pointLevel = doc.GetElement(intersectionFloorRectangularSolidIntersectCombineList.First().LevelId) as Level;
+                                double pointLevelElevation = pointLevel.Elevation;
+                                foreach (XYZ p in pointsList)
+                                {
+                                    XYZ vectorToPoint = (p - centroidIntersectionPoint).Normalize();
+
+                                    //Нижний левый угол
+                                    if (pointFacingOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineDownLeftPointList.Add(p);
+                                    }
+
+                                    //Нижний правый угол
+                                    if (pointFacingOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineDownRightPointList.Add(p);
+                                    }
+
+                                    //Верхний левый угол
+                                    if (pointFacingOrientation.AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.Negate().AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineUpLeftPointList.Add(p);
+                                    }
+
+                                    //Верхний правый угол
+                                    if (pointFacingOrientation.AngleTo(vectorToPoint) <= Math.PI / 2
+                                        && pointHandOrientation.AngleTo(vectorToPoint) <= Math.PI / 2)
+                                    {
+                                        combineUpRightPointList.Add(p);
+                                    }
+                                }
+
+                                List<XYZ> maxUpPointList = new List<XYZ>();
+                                maxUpPointList.AddRange(combineUpLeftPointList);
+                                maxUpPointList.AddRange(combineUpRightPointList);
+                                double maxUpDistance = -1000000;
+                                foreach (XYZ p in maxUpPointList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointFacingOrientation).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxUpDistance)
+                                    {
+                                        maxUpDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
+
+                                List<XYZ> maxDownPointList = new List<XYZ>();
+                                maxDownPointList.AddRange(combineDownLeftPointList);
+                                maxDownPointList.AddRange(combineDownRightPointList);
+                                double maxDownDistance = -1000000;
+                                foreach (XYZ p in maxDownPointList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointFacingOrientation.Negate()).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxDownDistance)
+                                    {
+                                        maxDownDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
+
+                                List<XYZ> maxRightPointList = new List<XYZ>();
+                                maxRightPointList.AddRange(combineDownRightPointList);
+                                maxRightPointList.AddRange(combineUpRightPointList);
+                                double maxRightDistance = -1000000;
+                                foreach (XYZ p in maxRightPointList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointHandOrientation).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxRightDistance)
+                                    {
+                                        maxRightDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
+
+                                List<XYZ> maxLeftPointList = new List<XYZ>();
+                                maxLeftPointList.AddRange(combineDownLeftPointList);
+                                maxLeftPointList.AddRange(combineUpLeftPointList);
+                                double maxLeftDistance = -1000000;
+                                foreach (XYZ p in maxLeftPointList)
+                                {
+                                    XYZ x = Line.CreateBound(centroidIntersectionPoint, centroidIntersectionPoint + 1000000 * pointHandOrientation.Negate()).Project(p).XYZPoint;
+                                    if (x.DistanceTo(centroidIntersectionPoint) > maxLeftDistance)
+                                    {
+                                        maxLeftDistance = x.DistanceTo(centroidIntersectionPoint);
+                                    }
+                                }
+
+                                double intersectionPointHeight = RoundUpToIncrement(maxUpDistance + maxDownDistance, roundHoleSizesUpIncrement);
+                                double intersectionPointWidth = RoundUpToIncrement(maxLeftDistance + maxRightDistance, roundHoleSizesUpIncrement);
+
+                                XYZ newCenterPoint = null;
+                                if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
+                                {
+                                    newCenterPoint = new XYZ(RoundToIncrement(centroidIntersectionPoint.X, RoundHolePosition)
+                                        , RoundToIncrement(centroidIntersectionPoint.Y, RoundHolePosition)
+                                        , RoundToIncrement(centroidIntersectionPoint.Z
+                                        - pointLevelElevation, RoundHolePosition));
+                                }
+                                else
+                                {
+                                    newCenterPoint = new XYZ(centroidIntersectionPoint.X
+                                        , centroidIntersectionPoint.Y
+                                        , centroidIntersectionPoint.Z - pointLevelElevation);
+                                }
+
+                                FamilyInstance intersectionPoint = doc.Create.NewFamilyInstance(newCenterPoint
+                                    , intersectionFloorRectangularFamilySymbol
+                                    , pointLevel
+                                    , StructuralType.NonStructural) as FamilyInstance;
+                                intersectionPoint.get_Parameter(intersectionPointWidthGuid).Set(intersectionPointWidth);
+                                intersectionPoint.get_Parameter(intersectionPointHeightGuid).Set(intersectionPointHeight);
+                                intersectionPoint.get_Parameter(intersectionPointThicknessGuid).Set(intersectionPointThickness);
+
+                                intersectionPoint.get_Parameter(heightOfBaseLevelGuid).Set(pointLevelElevation);
+                                intersectionPoint.get_Parameter(levelOffsetGuid).Set(intersectionPoint.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).AsDouble() - 50 / 304.8);
+
+                                double rotationAngle = pointFacingOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                if (rotationAngle != 0)
+                                {
+                                    Line rotationAxis = Line.CreateBound(newCenterPoint, newCenterPoint + 1 * XYZ.BasisZ);
+                                    ElementTransformUtils.RotateElement(doc
+                                        , intersectionPoint.Id
+                                        , rotationAxis
+                                        , rotationAngle);
+                                }
+
+                                foreach (FamilyInstance forDel in intersectionFloorRectangularSolidIntersectCombineList)
+                                {
+                                    doc.Delete(forDel.Id);
+                                    intersectionFloorRectangularCombineList.Remove(forDel);
+                                }
+                            }
+                            else
+                            {
+                                intersectionFloorRectangularCombineList.Remove(intersectionFloorRectangularSolidIntersectCombineList[0]);
+                            }
+
+                        }
                         t.Commit();
                     }
                 }
-                 tg.Assimilate();
+                tg.Assimilate();
             }
             return Result.Succeeded;
         }
