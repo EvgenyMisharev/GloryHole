@@ -96,8 +96,8 @@ namespace GloryHole
             string holeShapeButtonName = gloryHoleWPF.HoleShapeButtonName;
             string roundHolesPositionButtonName = gloryHoleWPF.RoundHolesPositionButtonName;
             double roundHoleSizesUpIncrement = gloryHoleWPF.RoundHoleSizesUpIncrement;
-            double RoundHolePosition = gloryHoleWPF.RoundHolePositionIncrement;
-            double AdditionalToThickness = 20 / 304.8;
+            double roundHolePosition = gloryHoleWPF.RoundHolePositionIncrement;
+            double additionalToThickness = 20 / 304.8;
             bool combineHoles = gloryHoleWPF.CombineHoles;
 
             //Получение трубопроводов, воздуховодов и кабельных лотков
@@ -195,7 +195,7 @@ namespace GloryHole
                                                 XYZ wallOrientation = wall.Orientation;
                                                 double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(pipeDiameter + pipeTopBottomClearance, roundHoleSizesUpIncrement);
-                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
                                                 double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
 
                                                 if (a > 90 && a < 180)
@@ -216,7 +216,7 @@ namespace GloryHole
 
                                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                                 {
-                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                                 }
                                                 else
                                                 {
@@ -248,7 +248,7 @@ namespace GloryHole
                                             {
                                                 XYZ wallOrientation = wall.Orientation;
                                                 double pipeDiameter = Math.Round(pipe.get_Parameter(BuiltInParameter.RBS_PIPE_OUTER_DIAMETER).AsDouble(), 6);
-                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
                                                 double a = Math.Round((wallOrientation.AngleTo((pipeCurve as Line).Direction)) * (180 / Math.PI), 6);
 
                                                 if (a > 90 && a < 180)
@@ -269,7 +269,7 @@ namespace GloryHole
 
                                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                                 {
-                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                                 }
                                                 else
                                                 {
@@ -313,7 +313,7 @@ namespace GloryHole
                                                     double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
 
                                                     double intersectionPointHeight = RoundUpToIncrement(ductDiameter + ductTopBottomClearance, roundHoleSizesUpIncrement);
-                                                    double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                                    double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
 
                                                     double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
 
@@ -335,7 +335,7 @@ namespace GloryHole
 
                                                     if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                                     {
-                                                        originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                        originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                                     }
                                                     else
                                                     {
@@ -366,7 +366,7 @@ namespace GloryHole
                                                 else
                                                 {
                                                     double ductDiameter = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_DIAMETER_PARAM).AsDouble(), 6);
-                                                    double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                                    double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
                                                     double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
 
                                                     if (a > 90 && a < 180)
@@ -387,7 +387,7 @@ namespace GloryHole
 
                                                     if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                                     {
-                                                        originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                        originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                                     }
                                                     else
                                                     {
@@ -420,7 +420,7 @@ namespace GloryHole
                                                 double ductHeight = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_HEIGHT_PARAM).AsDouble(), 6);
                                                 double ductWidth = Math.Round(duct.get_Parameter(BuiltInParameter.RBS_CURVE_WIDTH_PARAM).AsDouble(), 6);
                                                 double intersectionPointHeight = RoundUpToIncrement(ductHeight + ductTopBottomClearance, roundHoleSizesUpIncrement);
-                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                                double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
 
                                                 double a = Math.Round((wallOrientation.AngleTo((ductCurve as Line).Direction)) * (180 / Math.PI), 6);
 
@@ -443,7 +443,7 @@ namespace GloryHole
 
                                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                                 {
-                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                    originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                                 }
                                                 else
                                                 {
@@ -485,7 +485,7 @@ namespace GloryHole
                                             double cableTrayHeight = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_HEIGHT_PARAM).AsDouble(), 6);
                                             double cableTrayWidth = Math.Round(cableTray.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM).AsDouble(), 6);
                                             double intersectionPointHeight = RoundUpToIncrement(cableTrayHeight + cableTrayTopBottomClearance, roundHoleSizesUpIncrement);
-                                            double intersectionPointThickness = RoundUpToIncrement(wall.Width + AdditionalToThickness, 10);
+                                            double intersectionPointThickness = RoundUpToIncrement(wall.Width + additionalToThickness, 10);
 
                                             double a = Math.Round((wallOrientation.AngleTo((cableTrayCurve as Line).Direction)) * (180 / Math.PI), 6);
                                             if (a > 90 && a < 180)
@@ -507,7 +507,7 @@ namespace GloryHole
 
                                             if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                             {
-                                                originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Y, RoundHolePosition), RoundToIncrement(originIntersectionCurve.Z, RoundHolePosition) - lvl.Elevation);
+                                                originIntersectionCurve = new XYZ(RoundToIncrement(originIntersectionCurve.X, roundHolePosition), RoundToIncrement(originIntersectionCurve.Y, roundHolePosition), RoundToIncrement(originIntersectionCurve.Z, roundHolePosition) - lvl.Elevation);
                                             }
                                             else
                                             {
@@ -1222,10 +1222,10 @@ namespace GloryHole
                                 XYZ newCenterPoint = null;
                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                 {
-                                    newCenterPoint = new XYZ(RoundToIncrement(centroidIntersectionPoint.X, RoundHolePosition)
-                                        , RoundToIncrement(centroidIntersectionPoint.Y, RoundHolePosition)
+                                    newCenterPoint = new XYZ(RoundToIncrement(centroidIntersectionPoint.X, roundHolePosition)
+                                        , RoundToIncrement(centroidIntersectionPoint.Y, roundHolePosition)
                                         , RoundToIncrement((centroidIntersectionPoint.Z - intersectionPointHeight / 2)
-                                        - (doc.GetElement(intersectionWallRectangularSolidIntersectCombineList.First().LevelId) as Level).Elevation, RoundHolePosition));
+                                        - (doc.GetElement(intersectionWallRectangularSolidIntersectCombineList.First().LevelId) as Level).Elevation, roundHolePosition));
                                 }
                                 else
                                 {
@@ -1466,10 +1466,10 @@ namespace GloryHole
                                 XYZ newCenterPoint = null;
                                 if (roundHolesPositionButtonName == "radioButton_RoundHolesPositionYes")
                                 {
-                                    newCenterPoint = new XYZ(RoundToIncrement(centroidIntersectionPoint.X, RoundHolePosition)
-                                        , RoundToIncrement(centroidIntersectionPoint.Y, RoundHolePosition)
+                                    newCenterPoint = new XYZ(RoundToIncrement(centroidIntersectionPoint.X, roundHolePosition)
+                                        , RoundToIncrement(centroidIntersectionPoint.Y, roundHolePosition)
                                         , RoundToIncrement(centroidIntersectionPoint.Z
-                                        - pointLevelElevation, RoundHolePosition));
+                                        - pointLevelElevation, roundHolePosition));
                                 }
                                 else
                                 {

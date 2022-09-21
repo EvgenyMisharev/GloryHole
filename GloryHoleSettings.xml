@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <GloryHoleSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SelectedRevitLinkInstancesNames>
-    <string>КЖ.rvt : 16 : позиция Лит_1-АР</string>
+    <string>Проект АР.rvt : 3 : позиция &lt;Не общедоступное&gt;</string>
+    <string>Проект КР.rvt : 4 : позиция &lt;Не общедоступное&gt;</string>
   </SelectedRevitLinkInstancesNames>
   <IntersectionWallRectangularFamilySymbolName>ВК</IntersectionWallRectangularFamilySymbolName>
   <IntersectionWallRoundFamilySymbolName>ВК</IntersectionWallRoundFamilySymbolName>
