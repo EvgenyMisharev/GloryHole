@@ -64,8 +64,8 @@
         </GroupBox>
 
         <CheckBox x:Name="checkBox_CombineHoles" Content="Объединить пересекающиеся отверстия" Grid.Column="1" HorizontalAlignment="Left" Margin="10,195,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        
-        <Image x:Name="image" Margin="10,10,0,0" Grid.Row="1" Source="Resources/GloryHoleCommandImage.png" Width="276" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <Image x:Name="image" Margin="10,10,0,0" Grid.Row="1" Source="Resources/GloryHoleCommandImage.png" Width="276" Height="250" HorizontalAlignment="Left" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="Fant"/>
         <TextBox x:Name="textBox_PipeSideClearance" HorizontalAlignment="Left" Height="25" Margin="16,19,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <TextBox x:Name="textBox_PipeTopBottomClearance" HorizontalAlignment="Left" Height="25" Margin="16,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         <TextBox x:Name="textBox_PipeRoundClearance" HorizontalAlignment="Left" Height="25" Margin="16,106,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding ElementName=textBox_PipeSideClearance,Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
