@@ -230,7 +230,16 @@ namespace GloryHole
                                                 if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                                 {
                                                     Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                    double rotationAngle = 0;
+                                                    if (Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                                                    {
+                                                        rotationAngle = -wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    else
+                                                    {
+                                                        rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                                 }
 
                                                 double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + pipeSideClearance, roundHoleSizesUpIncrement);
@@ -283,7 +292,16 @@ namespace GloryHole
                                                 if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                                 {
                                                     Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                    double rotationAngle = 0;
+                                                    if (Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                                                    {
+                                                        rotationAngle = -wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    else
+                                                    {
+                                                        rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                                 }
 
                                                 double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + pipeSideClearance, roundHoleSizesUpIncrement);
@@ -349,7 +367,16 @@ namespace GloryHole
                                                     if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                                     {
                                                         Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                        ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                        double rotationAngle = 0;
+                                                        if (Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                                                        {
+                                                            rotationAngle = -wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                        }
+                                                        else
+                                                        {
+                                                            rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                        }
+                                                        ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                                     }
 
                                                     double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
@@ -401,7 +428,16 @@ namespace GloryHole
                                                     if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                                     {
                                                         Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                        ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                        double rotationAngle = 0;
+                                                        if (Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                                                        {
+                                                            rotationAngle = -wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                        }
+                                                        else
+                                                        {
+                                                            rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                        }
+                                                        ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                                     }
 
                                                     double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
@@ -457,7 +493,16 @@ namespace GloryHole
                                                 if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                                 {
                                                     Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                    double rotationAngle = 0;
+                                                    if(Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ),6) * (180 / Math.PI) < 180)
+                                                    {
+                                                        rotationAngle = - wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    else
+                                                    {
+                                                        rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                    }
+                                                    ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                                 }
 
                                                 double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + ductSideClearance, roundHoleSizesUpIncrement);
@@ -521,7 +566,16 @@ namespace GloryHole
                                             if (Math.Round(wallOrientation.AngleTo(intersectionPoint.FacingOrientation), 6) != 0)
                                             {
                                                 Line rotationLine = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
-                                                ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, wallOrientation.AngleTo(intersectionPoint.FacingOrientation));
+                                                double rotationAngle = 0;
+                                                if (Math.Round(wallOrientation.AngleOnPlaneTo(intersectionPoint.FacingOrientation, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                                                {
+                                                    rotationAngle = -wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                }
+                                                else
+                                                {
+                                                    rotationAngle = wallOrientation.AngleTo(intersectionPoint.FacingOrientation);
+                                                }
+                                                ElementTransformUtils.RotateElement(doc, intersectionPoint.Id, rotationLine, rotationAngle);
                                             }
 
                                             double intersectionPointWidth = RoundUpToIncrement(delta1 * 2 + delta2 * 2 + cableTraySideClearance, roundHoleSizesUpIncrement);
@@ -714,6 +768,17 @@ namespace GloryHole
 
                                                 if (ductRotationAngle != 0)
                                                 {
+                                                    double xxx = Math.Round(ductRotationAngle, 6) * (180 / Math.PI);
+                                                    //double rotationAngle = 0;
+                                                    //if (Math.Round(ductRotationAngle, 6) * (180 / Math.PI) < 180)
+                                                    //{
+                                                    //    rotationAngle = ductRotationAngle;
+                                                    //}
+                                                    //else
+                                                    //{
+                                                    //    rotationAngle = -ductRotationAngle;
+                                                    //}
+
                                                     Line rotationAxis = Line.CreateBound(originIntersectionCurve, originIntersectionCurve + 1 * XYZ.BasisZ);
                                                     ElementTransformUtils.RotateElement(doc
                                                         , intersectionPoint.Id
@@ -1587,7 +1652,16 @@ namespace GloryHole
         {
             foreach (Connector c in curve.ConnectorManager.Connectors)
             {
-                return Math.Asin(c.CoordinateSystem.BasisY.X);
+                double rotationAngle = 0;
+                if (Math.Round(c.CoordinateSystem.BasisY.AngleOnPlaneTo(XYZ.BasisY, XYZ.BasisZ), 6) * (180 / Math.PI) < 180)
+                {
+                    rotationAngle = -c.CoordinateSystem.BasisY.AngleTo(XYZ.BasisY);
+                }
+                else
+                {
+                    rotationAngle = c.CoordinateSystem.BasisY.AngleTo(XYZ.BasisY);
+                }
+                return rotationAngle;
             }
             return 0;
         }

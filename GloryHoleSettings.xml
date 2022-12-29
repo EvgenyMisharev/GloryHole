@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <GloryHoleSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SelectedRevitLinkInstancesNames>
-    <string>АР.rvt : 2 : позиция &lt;Не общедоступное&gt;</string>
+    <string>КР.rvt : 1 : позиция &lt;Не общедоступное&gt;</string>
   </SelectedRevitLinkInstancesNames>
   <IntersectionWallRectangularFamilySymbolName>ВК</IntersectionWallRectangularFamilySymbolName>
   <IntersectionWallRoundFamilySymbolName>ВК</IntersectionWallRoundFamilySymbolName>
@@ -11,10 +11,10 @@
   <RoundHolesPositionButtonName>radioButton_RoundHolesPositionNo</RoundHolesPositionButtonName>
   <RoundHoleSizesUpIncrementValue>50</RoundHoleSizesUpIncrementValue>
   <RoundHolePositionIncrementValue>10</RoundHolePositionIncrementValue>
-  <PipeSideClearanceValue>10</PipeSideClearanceValue>
-  <PipeTopBottomClearanceValue>10</PipeTopBottomClearanceValue>
-  <DuctSideClearanceValue>75</DuctSideClearanceValue>
-  <DuctTopBottomClearanceValue>75</DuctTopBottomClearanceValue>
+  <PipeSideClearanceValue>50</PipeSideClearanceValue>
+  <PipeTopBottomClearanceValue>50</PipeTopBottomClearanceValue>
+  <DuctSideClearanceValue>50</DuctSideClearanceValue>
+  <DuctTopBottomClearanceValue>50</DuctTopBottomClearanceValue>
   <CableTraySideClearanceValue>50</CableTraySideClearanceValue>
   <CableTrayTopBottomClearanceValue>50</CableTrayTopBottomClearanceValue>
   <CombineHolesValue>true</CombineHolesValue>
